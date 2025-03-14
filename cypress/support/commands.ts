@@ -1,4 +1,14 @@
 /// <reference types="cypress" />
+import {e2e} from '../support/constants';
+declare global{
+    namespace Cypress{
+        interface Chainable{
+            validacionInicial():Chainable<void>
+            agregarActividad(valor:string):Chainable<void>
+            validarEdicion():Chainable<void>
+        }
+    }
+}
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -35,3 +45,28 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('validacionInicial', () => {
+    cy.get(e2e.TITULO_PRINCIPAL).should('contain','Lista de Actividades');
+    cy.get(e2e.SUBTITULO).should('contain','Agregar Actividad');
+    cy.get(e2e.CAMPO_AGREGAR_ACTIVIDAD)
+      .should('be.visible')
+      .and('attr','value','');
+    cy.get(e2e.BOTON_AGREGAR)
+      .should('be.visible')
+      .should('has.css','background-color','rgb(40, 167, 69)');
+ })
+
+ Cypress.Commands.add('agregarActividad',(valor)=>{
+    cy.get(e2e.CAMPO_AGREGAR_ACTIVIDAD).type(valor);
+    cy.get(e2e.BOTON_AGREGAR).click();
+    //cy.get('[data-cy=" LhwVK5"]').should('have.text', valor);
+    cy.get('[data-cy=" LhwVK10"]').should('be.visible');
+    cy.get('[data-cy=" LhwVK11"]').should('be.visible');
+ }) 
+
+ Cypress.Commands.add('validarEdicion',()=>{
+    cy.get('[data-cy=" LhwVK6"]').should('be.visible');
+    cy.get('[data-cy=" LhwVK8"]').should('be.visible');
+    cy.get('[data-cy=" LhwVK7"]').should('be.enabled');
+ }) 
